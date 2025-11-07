@@ -45,7 +45,7 @@ def scan_files(directory):
     print(
         f"\n✅ Sökning klar! {len(files_info)} filer hittades i {directory}\n")
 
-    # 🔟 Returnera listan med all info (om du vill använda den senare)
+    # Returnera listan med all info (om du vill använda den senare)
     return files_info
 
 
