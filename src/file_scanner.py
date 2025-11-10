@@ -29,6 +29,7 @@ def scan_files(directory):
                         "path": full_path,
                         # storlek i byte
                         "size": os.path.getsize(full_path),
+                        "ext": os.path.splitext(filename)[1].lower(),
                         "modified_time": datetime.fromtimestamp(
                             os.path.getmtime(full_path)
                         ).strftime("%Y-%m-%d %H:%M:%S")

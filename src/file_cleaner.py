@@ -1,5 +1,6 @@
 import os
 import shutil
+from logger import log_action
 
 
 def clean_old_files(files_info, threshold_days=30):
@@ -50,6 +51,7 @@ def clean_old_files(files_info, threshold_days=30):
 
         except Exception as e:
             print(f"   {index}. ❌ Kunde inte flytta {file['name']}: {e}")
+    log_action("Flyttade gamla filer", candidates)
 
     # ✅ Sammanfattning
     print(
