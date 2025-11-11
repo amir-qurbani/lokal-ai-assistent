@@ -24,8 +24,20 @@ def init_db():
             scanned_at TEXT,
             is_deleted INTEGER DEFAULT 0,
             age_days INTEGER
+        );
+    ''')
+    conn.execute('''
+        CREATE TABLE IF NOT EXISTS embeddings (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            file_id INTEGER NOT NULL,
+            vector TEXT NOT NULL,
+            summary TEXT,
+            created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (file_id) REFERENCES files(id) ON DELETE CASCADE,
+            UNIQUE(file_id)
         )
     ''')
+
     conn.commit()
     conn.close()
 
