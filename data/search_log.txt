@@ -1,0 +1,24 @@
+
+[2025-11-12 20:28:40] Sökfråga: docker
+ - C:\Users\99amiqur\OneDrive\Desktop\testmapp\docker_cheat_sheet_todoapp.pdf: 59.6%
+ - C:\Users\99amiqur\Downloads\docker_cheat_sheet_todoapp.pdf: 59.6%
+ - C:\Users\99amiqur\Downloads\Inlämning2 rapport.pdf: 36.2%
+------------------------------------------------------------
+
+[2025-11-12 20:32:16] Sökfråga: docker
+ - C:\Users\99amiqur\Downloads\docker_cheat_sheet_todoapp.pdf: 59.6%
+ - C:\Users\99amiqur\OneDrive\Desktop\testmapp\docker_cheat_sheet_todoapp.pdf: 59.6%
+ - C:\Users\99amiqur\Downloads\Inlämning2 rapport.pdf: 36.2%
+------------------------------------------------------------
+
+[2025-11-12 20:35:14] Sökfråga: docker
+ - C:\Users\99amiqur\Downloads\docker_cheat_sheet_todoapp.pdf: 59.6%
+ - C:\Users\99amiqur\OneDrive\Desktop\testmapp\docker_cheat_sheet_todoapp.pdf: 59.6%
+ - C:\Users\99amiqur\Downloads\Inlämning2 rapport.pdf: 36.2%
+------------------------------------------------------------
+
+[2025-11-12 20:43:31] Sökfråga: azure
+ - C:\Users\99amiqur\Downloads\AzureLektionPdf\Grundläggande molnapplikationer (vecka 2).pdf: 58.3%
+ - C:\Users\99amiqur\Downloads\Veckoplan_Azure_Amir.pdf: 56.3%
+ - C:\Users\99amiqur\Downloads\Namnlöst dokument (3).pdf: 55.7%
+------------------------------------------------------------
