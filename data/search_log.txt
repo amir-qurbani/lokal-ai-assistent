@@ -22,3 +22,33 @@
  - C:\Users\99amiqur\Downloads\Veckoplan_Azure_Amir.pdf: 56.3%
  - C:\Users\99amiqur\Downloads\Namnlöst dokument (3).pdf: 55.7%
 ------------------------------------------------------------
+
+[2025-11-12 21:46:46] Sökfråga: docker
+ - C:\Users\99amiqur\Downloads\docker_cheat_sheet_todoapp.pdf: 59.6%
+ - C:\Users\99amiqur\OneDrive\Desktop\testmapp\docker_cheat_sheet_todoapp.pdf: 59.6%
+ - C:\Users\99amiqur\Downloads\Inlämning2 rapport.pdf: 36.2%
+------------------------------------------------------------
+
+[2025-11-12 21:50:48] Sökfråga: docker
+ - C:\Users\99amiqur\Downloads\docker_cheat_sheet_todoapp.pdf: 59.6%
+ - C:\Users\99amiqur\OneDrive\Desktop\testmapp\docker_cheat_sheet_todoapp.pdf: 59.6%
+ - C:\Users\99amiqur\Downloads\Inlämning2 rapport.pdf: 36.2%
+------------------------------------------------------------
+
+[2025-11-12 21:52:51] Sökfråga: docker
+ - C:\Users\99amiqur\Downloads\docker_cheat_sheet_todoapp.pdf: 59.6%
+ - C:\Users\99amiqur\OneDrive\Desktop\testmapp\docker_cheat_sheet_todoapp.pdf: 59.6%
+ - C:\Users\99amiqur\Downloads\Inlämning2 rapport.pdf: 36.2%
+------------------------------------------------------------
+
+[2025-11-12 22:01:14] Sökfråga: docker
+ - C:\Users\99amiqur\OneDrive\Desktop\testmapp\docker_cheat_sheet_todoapp.pdf: 59.6%
+ - C:\Users\99amiqur\Downloads\Inlämning2 rapport.pdf: 36.2%
+ - C:\Users\99amiqur\Downloads\Kubernetes.pdf: 35.9%
+------------------------------------------------------------
+
+[2025-11-12 22:03:26] Sökfråga: aws
+ - C:\Users\99amiqur\Downloads\Proj 1.pdf: 49.9%
+ - C:\Users\99amiqur\Downloads\Inlämning2 rapport.pdf: 40.9%
+ - C:\Users\99amiqur\Downloads\wp_arch_skiss_v2.pdf: 38.9%
+------------------------------------------------------------

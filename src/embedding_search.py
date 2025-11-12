@@ -7,10 +7,10 @@
 import os
 import json
 import math
+import unicodedata as ud
 from database_manager import get_connection
 from embedding_generator import generate_embedding
 from colorama import Fore, Style, init
-
 from search_logger import log_search
 
 # Aktiverar färg i terminalen
@@ -51,7 +51,7 @@ def embedding_search():
     conn = get_connection()
     cursor = conn.cursor()
     cursor.execute("""
-        SELECT DISTINCT f.path, e.vector, e.summary
+        SELECT f.path, e.vector, e.summary
         FROM embeddings e
         JOIN files f ON e.file_id = f.id
     """)
@@ -59,8 +59,14 @@ def embedding_search():
     conn.close()
 
     results = []
+    seen_files = set()
 
     for name, vector_json, summary in rows:
+        normalized_path = os.path.normcase(os.path.normpath(name.strip()))
+        if normalized_path in seen_files:
+            continue
+        seen_files.add(normalized_path)
+
         p = name.lower()
 
         # Filtrera bort onödiga eller känsliga filer
@@ -79,15 +85,26 @@ def embedding_search():
 
         results.append((name, summary, similarity))
 
-    # Sortera resultaten (högst likhet först)
+    # ----------------------------------------------------------
+    # Slå ihop resultat med samma filnamn (oavsett mapp/accentskillnader)
+    # ----------------------------------------------------------
+    def norm_title(p):
+        return ud.normalize("NFKC", os.path.basename(p)).casefold()
+
+    best_by_title = {}
+    for name, summary, sim in results:
+        key = norm_title(name)
+        if key not in best_by_title or sim > best_by_title[key][2]:
+            best_by_title[key] = (name, summary, sim)
+
+    # Ersätt results med de bästa per titel
+    results = list(best_by_title.values())
     results.sort(key=lambda x: x[2], reverse=True)
 
     # ----------------------------------------------------------
     # Skriv ut resultat
     # ----------------------------------------------------------
     print("\n📄 Sökningsresultat (topp 5):\n" + "-" * 60)
-
-    from search_logger import log_search  # Import en gång
 
     for i, (name, summary, similarity) in enumerate(results[:5], 1):
         percent = round(similarity * 100, 1)
@@ -107,7 +124,7 @@ def embedding_search():
         print(f"   📘 Sammanfattning: {summary[:200]}...")
         print("-" * 60)
 
-# 🧠 När allt är utskrivet → logga sökningen EN gång
+    # 🧠 Logga sökningen EN gång
     log_search(query, results)
 
 
