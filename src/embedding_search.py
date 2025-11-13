@@ -12,8 +12,6 @@ from database_manager import get_connection
 from embedding_generator import generate_embedding
 from colorama import Fore, Style, init
 from search_logger import log_search
-from context_memory import load_search_memory
-
 # Aktiverar färg i terminalen
 init(autoreset=True)
 
@@ -41,18 +39,25 @@ def cosine_similarity(a, b):
 def embedding_search():
     print("🔍 Startar sökning med embeddings...")
 
-    # 🧠 Hämta användarens sökminne
-    memory = load_search_memory()
-    sorted_item = sorted(memory.items(), key=lambda x: x[1], reverse=True)
-    top_words = [w for w, f in sorted_item[:3]]
+    # 🧠 Hämta användarens sökminne från databasen
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT term, frequency
+        FROM user_memory
+        ORDER BY frequency DESC
+        LIMIT 5
+    """)
+    memory = dict(cursor.fetchall())
+    conn.close()
 
     print("🧠 Aktivt minne:", memory)
 
-    # 📝 Användarens fråga
-    query = input("Ange din sökfråga: ")
-
     # Skapa embedding för frågan
+    query = input("Ange din sökfråga: ")
     query_vector = generate_embedding(query)
+    sorted_item = sorted(memory.items(), key=lambda x: x[1], reverse=True)
+    top_words = [w for w, f in sorted_item[:3]]
 
     # Hämta embeddings från DB
     conn = get_connection()
@@ -177,6 +182,18 @@ def embedding_search():
         print("-" * 60)
 
     # 🧠 Logga sökning
+    # 🧠 Uppdatera användarminne i databasen
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("""
+        INSERT INTO user_memory (term, frequency)
+        VALUES (?, 1)
+        ON CONFLICT(term)
+        DO UPDATE SET frequency = frequency + 1
+    """, (query.lower(),))
+    conn.commit()
+    conn.close()
+
     log_search(query, results)
 
 

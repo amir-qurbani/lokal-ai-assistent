@@ -7,26 +7,70 @@ import os
 from datetime import datetime
 
 
-def log_search(query, results):
-    # Se till att data-mappen finns
-    os.makedirs("data", exist_ok=True)
+import sqlite3
+import os
+from datetime import datetime
+from database_manager import get_connection
 
-    # Tidsstämpel
+
+def log_search(query, results):
+    # Hämta tid
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    # Loggfil
-    log_file = "data/search_log.txt"
+    # Om inga resultat – logga tomt
+    if len(results) == 0:
+        top_result = None
+        match_score = 0.0
+    else:
+        top_result = results[0]["name"]
+        match_score = float(results[0]["total"])
 
-    with open(log_file, "a", encoding="utf-8") as f:
-        f.write(f"\n[{timestamp}] Sökfråga: {query}\n")
+    # Spara i SQLite
+    conn = get_connection()
+    cursor = conn.cursor()
 
-        # Hämta topp 3 resultat
-        for item in results[:3]:
-            name = item["name"]
-            summary = item["summary"]
-            score = round(item["total"] * 100, 1)  # total → procent
+    cursor.execute("""
+        INSERT INTO search_logs (query, timestamp, top_result, match_score)
+        VALUES (?, ?, ?, ?)
+    """, (query, timestamp, top_result, match_score))
 
-            f.write(f" - {name}: {score}%\n")
-            f.write(f"   Sammanfattning: {summary[:120]}...\n")
+    conn.commit()
+    conn.close()
 
-        f.write("-" * 60 + "\n")
+
+def show_log_from_db():
+    """Visar de senaste sökningarna från databasen med färg och tydlig layout."""
+    from colorama import Fore, Style
+
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT query, timestamp, top_result, match_score
+        FROM search_logs
+        ORDER BY id DESC
+        LIMIT 10
+    """)
+    rows = cursor.fetchall()
+    conn.close()
+
+    if not rows:
+        print("📭 Ingen logg hittades i databasen ännu.")
+        return
+
+    print("\n📜 --- Senaste sökloggar ---")
+
+    for q, t, r, s in rows:
+        score = round(s * 100, 1)
+        color = (
+            Fore.GREEN if score >= 70
+            else Fore.YELLOW if score >= 40
+            else Fore.RED
+        )
+
+        print(f"{Fore.CYAN}🔎 Fråga:{Style.RESET_ALL} {q}")
+        print(f"{Fore.MAGENTA}⏱️ Tid:{Style.RESET_ALL} {t}")
+        print(f"{Fore.YELLOW}📄 Toppresultat:{Style.RESET_ALL} {r}")
+        print(f"{color}📊 Matchning:{Style.RESET_ALL} {score}%")
+        print("-" * 40)
+
+    print("📜 --- Slut på logg ---\n")

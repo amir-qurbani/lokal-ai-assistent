@@ -37,6 +37,22 @@ def init_db():
             UNIQUE(file_id)
         )
     ''')
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS search_logs (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            query TEXT,
+            timestamp TEXT,
+            top_result TEXT,
+            match_score REAL
+        )
+        """)
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS user_memory (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            term TEXT UNIQUE,
+            frequency INTEGER DEFAULT 1
+        )
+    """)
 
     conn.commit()
     conn.close()
