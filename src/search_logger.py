@@ -1,27 +1,32 @@
-from datetime import datetime
+# search_logger.py
+# ----------------------------------------------------------
+# Loggar sökningar till data/search_log.txt
+# ----------------------------------------------------------
+
 import os
+from datetime import datetime
 
 
 def log_search(query, results):
     # Se till att data-mappen finns
     os.makedirs("data", exist_ok=True)
 
-    # Skapa tidsstämpel
+    # Tidsstämpel
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    # Bestäm loggfil
+    # Loggfil
     log_file = "data/search_log.txt"
 
-    # Öppna filen EN gång och håll den öppen under hela skrivningen
     with open(log_file, "a", encoding="utf-8") as f:
-        # Rubrikrad
         f.write(f"\n[{timestamp}] Sökfråga: {query}\n")
 
-        # Topp 3 resultat
-        top_results = results[:3]
-        for name, summary, score in top_results:
-            percent = round(score * 100, 1)  # 👈 multiplicera med 100 här!
-            f.write(f" - {name}: {percent}%\n")
+        # Hämta topp 3 resultat
+        for item in results[:3]:
+            name = item["name"]
+            summary = item["summary"]
+            score = round(item["total"] * 100, 1)  # total → procent
 
-        # ✅ Avgränsare måste ligga INNE i with-blocket
+            f.write(f" - {name}: {score}%\n")
+            f.write(f"   Sammanfattning: {summary[:120]}...\n")
+
         f.write("-" * 60 + "\n")
