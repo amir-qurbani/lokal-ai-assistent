@@ -2,3 +2,6 @@
     - Azure_WebApp_Deployment_Diagram.pdf
     - Gbgmerch Api Guide.pdf
 
+[2025-11-14 13:57:08] Flyttade gamla filer till .trash - 1 filer
+    - Studieintyg_CLO24HT_Amir_Qurbani.pdf
+

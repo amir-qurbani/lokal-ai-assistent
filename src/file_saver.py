@@ -4,7 +4,7 @@ from datetime import datetime
 import os
 
 
-def save_files_to_db(files_info):
+def save_files_to_db(files_info, batch_id):
     print("🧠 Kör save_files_to_db() ...")
     conn = get_connection()
 
@@ -12,8 +12,8 @@ def save_files_to_db(files_info):
         try:
             conn.execute('''
                 INSERT OR REPLACE INTO files 
-                (path, name, ext, size, modified_time, scanned_at, age_days) 
-                VALUES (?, ?, ?, ?, ?, ?, ?)
+                (path, name, ext, size, modified_time, scanned_at, age_days, root_path, batch_id) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
             ''', (
                 file['path'],
                 file['name'],
@@ -21,11 +21,12 @@ def save_files_to_db(files_info):
                 file['size'],
                 file['modified_time'],
                 datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-                file.get('age_days', 0)
+                file.get('age_days', 0),
+                file.get('root_path', ''),
+                batch_id
             ))
         except sqlite3.Error as e:
             print(f"❌ Fel vid sparande av {file['name']} till databasen: {e}")
     conn.commit()
     conn.close()
-    print(
-        f"💾 {len(files_info)} filer sparades i databasen (ignorerar ev. dubbletter).")
+    print(f"💾 {len(files_info)} filer sparades i databasen (batch {batch_id}).")
