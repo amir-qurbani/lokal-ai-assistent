@@ -35,13 +35,12 @@ try:
     while True:
         print(f"\n=== Huvudmeny === v{VERSION}")
         print("1. Skanna filer")
-        print("2. Generera embeddings")
-        print("3. Söka dokument")
-        print("4. Visa logg")
-        print("5. Rensa gamla filer")
-        print("6. Avsluta")
+        print("2. Söka dokument")
+        print("3. Visa logg")
+        print("4. Rensa gamla filer")
+        print("5. Avsluta")
 
-        val = input("Välj ett alternativ (1-6): ")
+        val = input("Välj ett alternativ (1-5): ")
 
         if val == "1":
             directory = input("Vilken mapp vill du skanna?")
@@ -49,23 +48,22 @@ try:
             files = scan_files(directory, batch_id)
             if files:
                 save_files_to_db(files, batch_id)
-        elif val == "2":
-            print("🔄 Genererar embeddings för skannade filer...")
-            generate_all_embeddings()
+                print("🧠 Genererar embeddings automatiskt...")
+                generate_all_embeddings()
 
-        elif val == "3":
+        elif val == "2":
             print("🔎 Söker dokument baserat på din fråga...")
             embedding_search()
             analyzed_files = []
 
-        elif val == "4":
+        elif val == "3":
             print("📜 Visar söklogg från databasen...")
             show_log_from_db()
-        elif val == "5":
+        elif val == "4":
             days = int(input("Rensa filer äldre än hur många dagar?: "))
             clean_old_files(days)
 
-        elif val == "6":
+        elif val == "5":
             print(f"\nTack för att du använde {APP_NAME} 👋")
             print("Lycka till med studierna och ditt examensarbete!")
             break
