@@ -73,10 +73,3 @@ except KeyboardInterrupt:
     print("\n⛔ Avbrutet av användaren (Ctrl+C).")
     print(f"Tack för att du använde {APP_NAME} 👋")
     print("Lycka till med studierna och ditt examensarbete!")
-
-
-# Anropa funktionen för flera mappar
-# scan_files(r"C:\Users\99amiqur\Downloads")
-# scan_files(r"C:\Users\99amiqur\OneDrive\Dokument")
-# scan_files(r"C:\Users\99amiqur\OneDrive\Desktop")
-# scan_files(r"C:\Users\99amiqur\OneDrive\Desktop\testmapp")

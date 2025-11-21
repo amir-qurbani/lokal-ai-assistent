@@ -12,6 +12,26 @@ from search_logger import log_search
 
 init(autoreset=True)
 
+# Ord vi inte bryr oss om i minnet (vanliga småord)
+STOPWORDS = {
+    "visa", "vis", "mig", "filer", "fil", "om", "allt", "alla",
+    "ge", "snälla", "kan", "du", "the", "and", "eller", "och"
+}
+
+
+def extract_keywords(text: str):
+    """
+    Gör om en mening till viktiga ord:
+    - lowercase
+    - tar bort enkel skiljetecken
+    - filtrerar bort småord (STOPWORDS)
+    """
+    text = text.lower()
+    for ch in ",.!?;:()[]\"'":
+        text = text.replace(ch, " ")
+    words = [w.strip() for w in text.split() if w.strip()]
+    return [w for w in words if w not in STOPWORDS]
+
 
 def dot(a, b):
     return sum(x * y for x, y in zip(a, b))
@@ -45,6 +65,7 @@ def embedding_search():
     # Embedding för query
     query = input("Ange din sökfråga: ")
     query_vector = generate_embedding(query)
+    keywords = extract_keywords(query)
 
     sorted_item = sorted(memory.items(), key=lambda x: x[1], reverse=True)
     top_words = [w for w, f in sorted_item[:3]]
@@ -71,10 +92,9 @@ def embedding_search():
         if not vector_json:
             continue
 
-        # Gör summary säker
         summary = summary or ""
-
         normalized_path = os.path.normcase(os.path.normpath(path.strip()))
+
         if normalized_path in seen_files:
             continue
         seen_files.add(normalized_path)
@@ -88,16 +108,15 @@ def embedding_search():
         if len(summary) < 60:
             continue
 
-        # Hämta embedding-vektor
         vector = json.loads(vector_json)
 
-        # Baspoäng
+        # Baspoäng (cosine similarity)
         base_score = cosine_similarity(query_vector, vector)
 
         # Kontextbonus
         context_bonus = 0.0
 
-        # Frekvensbonus
+        # Frekvensbonus (user memory)
         for keyword, freq in memory.items():
             if keyword.lower() in path.lower() or keyword.lower() in summary.lower():
                 context_bonus += 0.05 * freq
@@ -109,7 +128,7 @@ def embedding_search():
             if word.lower() in path.lower() or word.lower() in summary.lower():
                 context_bonus += 0.05
 
-        # Bonus om ordet finns i text
+        # Bonus om query-ord finns i text
         summary_lower = summary.lower()
         count = summary_lower.count(query.lower())
         if count > 0:
@@ -167,18 +186,25 @@ def embedding_search():
         print(f"   📘 Sammanfattning: {summary[:200]}...")
         print("-" * 60)
 
-    # Logga sökning
+    # ------------------------------------------------------
+    # 🚀 RÄTT FIX: Logga ENDAST keywords – aldrig hela meningen
+    # ------------------------------------------------------
+
     conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute("""
-        INSERT INTO user_memory (term, frequency)
-        VALUES (?, 1)
-        ON CONFLICT(term)
-        DO UPDATE SET frequency = frequency + 1
-    """, (query.lower(),))
+
+    for term in keywords:
+        cursor.execute("""
+            INSERT INTO user_memory (term, frequency)
+            VALUES (?, 1)
+            ON CONFLICT(term)
+            DO UPDATE SET frequency = frequency + 1
+        """, (term,))
+
     conn.commit()
     conn.close()
 
+    # Logga sökningen i logg-filen
     log_search(query, results)
 
 
