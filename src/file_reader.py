@@ -1,25 +1,34 @@
-# ska senare kunna läsa textinnehåll från olika filtyper
 import os
-import PyPDF2  # för att läsa PDF-filer
+import PyPDF2
+from log_service import log_action   # så att fel loggas
 
 
 def read_file_content(path):
     ext = os.path.splitext(path)[1].lower()
+
+    # Filen finns inte
+    if not os.path.exists(path):
+        log_action(f"Fel: Filen finns inte → {path}")
+        return ""
+
     try:
-        if ext == '.txt':
+        if ext == '.txt' or ext == '.md':
             with open(path, 'r', encoding='utf-8') as f:
                 return f.read()
+
         elif ext == '.pdf':
             with open(path, 'rb') as f:
                 reader = PyPDF2.PdfReader(f)
                 content = ''
                 for page in reader.pages:
-                    content += (page.extract_text() or '') + '\n'
+                    text = page.extract_text() or ''
+                    content += text + '\n'
                 return content
-        elif ext == '.md':
-            with open(path, 'r', encoding='utf-8') as f:
-                return f.read()
+
         else:
-            return f"❕ Filtypen '{ext}' stöds inte för innehållsläsning."
+            log_action(f"Varning: Filtypen stöds inte → {ext}")
+            return ""
+
     except Exception as e:
-        return f"❕ Kunde inte läsa filen: {e}"
+        log_action(f"Fel: Kunde inte läsa filen {path}. Orsak: {e}")
+        return ""

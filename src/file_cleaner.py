@@ -2,7 +2,7 @@ import os
 import shutil
 from datetime import datetime
 from database_manager import get_connection
-from logger import log_action
+from log_service import log_action
 
 
 def clean_old_files(threshold_days=30):
