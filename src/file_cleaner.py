@@ -6,12 +6,6 @@ from log_service import log_action
 
 
 def clean_old_files(threshold_days=30):
-    """
-    Rensar gamla filer från SENASTE batchen (senaste skanningen).
-    - Hämtar filer från databasen
-    - Räknar ut age_days själv
-    - Flyttar gamla filer till data/.trash
-    """
 
     # 1️⃣ Hämta senaste batch_id
     conn = get_connection()
