@@ -15,7 +15,7 @@ init(autoreset=True)
 # Ord vi inte bryr oss om i minnet (vanliga småord)
 STOPWORDS = {
     "visa", "vis", "mig", "filer", "fil", "om", "allt", "alla",
-    "ge", "snälla", "kan", "du", "the", "and", "eller", "och"
+    "ge", "snälla", "kan", "du", "the", "and", "eller", "och", "hur"
 }
 
 
